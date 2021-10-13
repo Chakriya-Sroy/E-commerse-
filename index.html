@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecomerse website</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .header {
+            width: 800px;
+            margin: 100px auto;
+            height: 100px;
+            background-color: rgba(204, 204, 204, 0.56);
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0;
+
+        }
+
+        .Q,
+        .C,
+        .Quality,
+        .S {
+            margin-top: 20px;
+        }
+
+        .Q {
+            margin-left: 20px;
+        }
+
+        .S {
+            margin-right: 20px;
+        }
+
+        label {
+            text-transform: uppercase;
+        }
+
+        input,
+        select,
+        button {
+            box-sizing: border-box;
+            padding: 5px 10px;
+            background: white;
+            border: 1px solid #ccc;
+        }
+
+        .blue {
+            color: white;
+            background: rgb(97, 171, 194);
+            font-weight: bold;
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        .demo {
+            margin: 20px auto;
+            width: 800px;
+            height: 400px;
+            border: 1px solid black;
+            display: flex;
+            flex-direction: row;
+            border: none;
+        }
+
+        .demo-picture {
+            border: 1px solid black;
+            flex: 1;
+        }
+
+        .demo-picture img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .demo-detial {
+            flex: 1;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .demo-detial label {
+            line-height: 2;
+            margin-left: 30px;
+
+        }
+
+        .demo-detial button {
+            margin-top: 20px;
+            margin-left: 30px;
+            padding: 10px 25px;
+            background: rgb(44, 250, 25);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button,
+        input,
+        select {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="Q">
+            <label for="">quantity</label><br>
+            <input type="number">
+        </div>
+        <div class="C">
+            <label for="">Color</label><br>
+            <button id="plain">White</button>
+            <button id="colored" class="blue">Colored</button>
+        </div>
+        <div class="Quality">
+            <label for="">Quality of fabric</label><br>
+            <button id="basic" value="basic">Basic(150mg/m2)</button>
+            <button id="high" value="high" class="blue">High(190mg/m2)</button>
+        </div>
+        <div class="S">
+            <label for="">Selected</label><br>
+            <select name="" id="select">
+                <option value="plain">plain</option>
+                <option value="colored">colored</option>
+            </select>
+        </div>
+    </div>
+    <div class="demo">
+        <div class="demo-picture">
+            <img src="" alt="">
+        </div>
+        <div class="demo-detial">
+            <h1>Order Details</h1><br>
+            <label for="">Product: <span id="pro"></span></label><br>
+            <label for="">Style : <span id="sty"></span></label><br>
+            <label for="">Quality: <span id="qua"></span></label><br>
+            <label for="">Colour:</label><span id='col'></span><br>
+            <label for="">Quantity:</label> <span id="quan"></span><br>
+            <label for="">Total:</label> <span id="total"></span><br>
+            
+            <button>Complete Order</button>
+        </div>
+    </div>
+    <script>
+        'use strict'
+        const products = {
+            white: {
+                plain: {
+                    unit_price: 5.12,
+                    photo: 'https://d1nxj5numvhshx.cloudfront.net/13561-large_default/selected-homme-shd-pima-white-t-shirt.jpg'
+                },
+                colored: {
+                    unit_price: 8.95,
+                    photo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJJP3S6PZedP5_aiZdN5yfxEeRoaxthItBEQ&usqp=CAU'
+                }
+            }
+        }
+        const variable = {
+            color: '',
+            quality: '',
+            quanitity: null,
+            style: ''
+        }
+        let quality;
+        document.getElementById('pro').innerHTML = 'T-shirt from CH store'
+        const groupColor = document.querySelectorAll('.C button')
+        const groupQuality = document.querySelectorAll('.Quality button')
+        const img = document.querySelector('img')
+        function update() {
+            variable.quanitity = `${document.querySelector('input[type=number]').value}`
+            variable.style = `${document.querySelector('#select').value}`
+            variable.color = `${document.querySelector('.C button.blue').innerHTML}`
+            variable.quality = `${document.querySelector('.Quality button.blue').innerHTML}`
+        }
+        function updateDetail() {
+            update();
+            document.getElementById('col').innerHTML = variable.color;
+            document.getElementById('qua').innerHTML = variable.quality;
+            document.getElementById('sty').innerHTML = variable.style;
+            document.getElementById('quan').innerHTML = variable.quanitity;
+            
+        }
+        function calculatePrice(){
+            let number=parseInt(variable.quanitity)
+            let price=parseFloat(products.white[variable.style].unit_price)
+            if(variable.quality==='Basic(150mg/m2)'){
+                return (1.2*number*price).toFixed(2)
+            }
+            return (1.5*number*price).toFixed(2)
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            updateDetail();
+            groupColor.forEach((item, index, arr) => {
+                item.addEventListener('click', function () {
+                    if (!item.classList.contains('blue')) {
+                        item.classList.add('blue');
+                        if(index==0){
+                            arr[index+1].classList.remove('blue')
+                        }
+                        else{
+                            arr[index-1].classList.remove('blue')
+                        }
+                        updateDetail()
+                        img.src=products.white[item.id].photo;
+                        
+                       
+                    }
+                    else if(item.classList.contains('blue')){
+                        if(index==0){
+                            arr[index+1].classList.remove('blue')
+                        }
+                        arr[index-1].classList.remove('blue')
+                        updateDetail()
+                        img.src=products.white[item.id].photo;
+                    }
+                   
+                })
+            })
+            groupQuality.forEach((item,index,arr) => {
+                item.addEventListener('click', function () {
+                    if (!item.classList.contains('blue')) {
+                        item.classList.add('blue');
+                        if(index==0){
+                            arr[index+1].classList.remove('blue')
+                        }
+                        else{
+                            arr[index-1].classList.remove('blue')
+                        }
+                        updateDetail()
+                        document.getElementById('total').innerHTML=`${calculatePrice()} $`
+                       
+                    }
+                    else if(item.classList.contains('blue')){
+                        if(index==0){
+                            arr[index+1].classList.remove('blue')
+                        }
+                        arr[index-1].classList.remove('blue')
+                        updateDetail()
+                        document.getElementById('total').innerHTML=`${calculatePrice()} $`
+                    }
+                   
+                })
+            })
+            document.querySelector('#select').addEventListener('change', function () {   
+                updateDetail();
+                document.getElementById('total').innerHTML=`${calculatePrice()} $`
+            })
+            document.querySelector('input[type=number]').addEventListener('change', function () {
+                updateDetail()
+                document.getElementById('total').innerHTML=`${calculatePrice()} $`
+            })
+            // so price update whenever user change quanity , style , quality
+        })
+    </script>
+</body>
+
+</html>
